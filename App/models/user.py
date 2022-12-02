@@ -6,8 +6,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username =  db.Column(db.String, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    images = db.relationship('Image', backref='image', lazy=True, cascade="all, delete-orphan")
-    ratings = db.relationship('Rating', backref='rating', lazy=True, cascade="all, delete-orphan")
+    images = db.relationship('Image', backref='user', lazy=True, cascade="all, delete-orphan")
+    rankings = db.relationship('Rating', backref='user', lazy=True, cascade="all, delete-orphan")
 
     def __init__(self, username, password):
         self.username = username
@@ -18,7 +18,6 @@ class User(db.Model):
             'id': self.id,
             'username': self.username,
             'images': [image.toJSON() for image in self.images],
-            'ratings': [rating.toJSON() for rating in self.ratings]
         }
     
 

@@ -5,22 +5,22 @@ from datetime import date
 #Timestamps solve the 'limited number of ratings a day' problem
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    creatorId =  db.Column(db.Integer,  nullable=False)
-    targetId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    score = db.Column(db.Integer, nullable=False)
-    timeStamp = db.Column(db.Date , nullable=False)
+    raterId =  db.Column(db.Integer, db.ForeingKey("user.id"), nullable=False)
+    ratedId = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    rater = db.relationship("User", foreign_keys=[rater_id])
+    rated = db.relationship("User", foreign_keys =[ratedId])
+    rating = db.Column(db.Interger, nullable=False)
     
-    def __init__(self, creatorId, targetId, score):
-        self.creatorId = creatorId
-        self.targetId = targetId
-        self.score = score
-        self.timeStamp = date.today()
+    def __init__(self, raterId, ratedId, rating):
+        self.raterId = raterId
+        self.ratedId = ratedId
+        self.rating = rating
     
     def toJSON(self):
         return{
             'id': self.id,
-            'creatorId': self.creatorId,
-            'targetId': self.targetId,
-            'score': self.score,
-            'timeStamp': self.timeStamp
+            'raterId': self.raterId,
+            'ratedId': self.ratedId,
+            'rating': self.rating, 
         }
+
