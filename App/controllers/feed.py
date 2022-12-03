@@ -1,8 +1,8 @@
 from App.models import Feed
 from App.database import db
 
-def create_feed(send_id, receive_id, distributor_id):
-    feed = Feed(send_id, receive_id, distributor_id)
+def create_feed(senderId, receiverId, distributorId):
+    feed = Feed(senderId, receiverId, distributorId)
     db.session.add(feed)
     db.session.commit()
     return feed
@@ -23,20 +23,20 @@ def get_all_feed_json():
     feed = Feed.query.all()
     return [feed.to_json() for feed in feed]
 
-def get_sender_feeds(send_id):
-    feeds = Feed.query.filter_by(send_id = send_id).all()
+def get_sender_feeds(senderId):
+    feeds = Feed.query.filter_by(senderId = senderId).all()
     return feeds
 
-def get_sender_feeds_json(send_id):
-    feeds = Feed.query.filter_by(send_id = send_id).all()
+def get_sender_feeds_json(senderId):
+    feeds = Feed.query.filter_by(senderId = senderId).all()
     return [feed.to_json() for feed in feeds]
 
-def get_receiver_feeds(receive_id):
-    feeds = Feed.query.filter_by(receive_id = receive_id).all()
+def get_receiver_feeds(receiverId):
+    feeds = Feed.query.filter_by(receiverId = receiverId).all()
     return feeds
 
-def get_receiver_feeds_json(receive_id):
-    feeds = Feed.query.filter_by(receive_id = receive_id).all()
+def get_receiver_feeds_json(receiverId):
+    feeds = Feed.query.filter_by(receiverId = receiverId).all()
     return [feed.to_json() for feed in feeds]
 
 def feed_view(id):
