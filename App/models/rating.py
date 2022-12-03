@@ -5,7 +5,7 @@ from datetime import date
 #Timestamps solve the 'limited number of ratings a day' problem
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    raterId =  db.Column(db.Integer, db.ForeingKey("user.id"), nullable=False)
+    raterId =  db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     ratedId = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     rater = db.relationship("User", foreign_keys=[rater_id])
     rated = db.relationship("User", foreign_keys =[ratedId])
