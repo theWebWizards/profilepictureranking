@@ -1,45 +1,58 @@
 from App.models import Image
+from App.controllers import get_user 
 from App.database import db
 
-def create_image(userId):
-    newImage = Image(userId=userId)
-    db.session.add(newImage)
-    db.session.commit()
-    return newImage
+def createImage(userId, url):
+    user = get_user(userId)
+    if user:
+        image = Image(userId, url)
+        db.session.add(image)
+        db.session.commit()
+        return image
+    return None
 
-def get_image(id):
-    return Image.query.get(id)
-
-def get_image_json(id):
+def getImage(id):
     image = Image.query.get(id)
-    if not image:
-        return []
-    image = image.toJSON()
     return image
 
-def get_images_by_userid(userId):
-    return Image.query.filter_by(userId=userId)
+def getImage_JSON(id):
+    image = Image.query.get(id)
+    if image:
+        return image.toJSON()
+    return[]
 
-def get_images_by_userid_json(userId):
-    images = Image.query.filter_by(userId=userId)
-    if not images:
-        return []
-    images = [image.toJSON() for image in images]
+def getAllImages():
+    images = Image.query.all()
     return images
 
-def get_all_images():
-    return Image.query.all()
-
-def get_all_images_json():
+def getAllImages_JSON():
     images = Image.query.all()
-    if images:
-        images = [image.toJSON() for image in images]
-        return images
-    return []
+    return[image.toJSON() for image in images]
 
-def delete_image(id):
-    image = get_image(id)
+def getImagesByUser(userId):
+    images = Image.query.filter_by(userId = userId).all()
+    return images
+
+def getImagesByUser_JSON(userId):
+    images = Image.query.filter_by(userId = userId).all()
+    return[image.toJSON() for image in images]
+
+def getAverageImageRank(imageId):
+    image = getImage(imageId)
+    if image:
+        return image.getAverageRank()
+    return 0
+
+def getImageRanking(imageId):
+    image = getImage(imageId)
+    if image:
+        return image.getAllRankings()
+    return[]
+
+def deleteImage(id):
+    image = getImage(id)
     if image:
         db.session.delete(image)
-        return db.session.commit()
-    return None
+        db.session.commit()
+        return True
+    return False
