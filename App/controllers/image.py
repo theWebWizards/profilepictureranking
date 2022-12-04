@@ -49,6 +49,10 @@ def getImageRanking(imageId):
         return image.getAllRankings()
     return[]
 
+def getImageRankingJSON(imageId):
+    rank = getImageRanking(imageId)
+    return[ranking.toJSON() for ranking in rank]
+
 def deleteImage(id):
     image = getImage(id)
     if image:
