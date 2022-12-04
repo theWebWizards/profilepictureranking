@@ -15,6 +15,21 @@ class Rating(db.Model):
         self.raterId = raterId
         self.rateeId = ratedId
         self.rating = rating
+
+    def getId(self):
+        return self.id
+
+    def getRating(self):
+        return self.rating
+
+    def getRaterId(self):
+        return self.raterId
+
+    def getRateeId(self):
+        return self.rateeId
+
+    def setRating(self, newRating):
+        self.rating = newRating
     
     def toJSON(self):
         return{
