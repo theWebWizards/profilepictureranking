@@ -16,6 +16,12 @@ def getUserbyUsername(username):
 def get_user(id):
     return User.query.get(id)
 
+def get_user_json(id):
+    user = get_user(id)
+    if user:
+        return user.toJSON()
+    return None
+
 def get_all_users():
     return User.query.all()
 
