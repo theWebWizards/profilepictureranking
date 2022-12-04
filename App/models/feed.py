@@ -15,6 +15,15 @@ class Feed(db.Model):
         self.distributorId = distributorId
         self.seen = False
 
+    def getId(self):
+        return self.id
+
+    def getDistributorId(self):
+        return self.distributorId
+
+    def isSeen(self):
+        return self.seen
+
     def setSeen(self):
         self.seen = True
     
