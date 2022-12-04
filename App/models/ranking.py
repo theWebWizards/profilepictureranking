@@ -12,6 +12,18 @@ class Ranking(db.Model):
         self.creatorId = creatorId
         self.imageId = imageId
         self.rank = rank
+
+    def getId(self):
+        return self.id
+
+    def getRankerId(self):
+        return self.rankerId
+
+    def getImageId(self):
+        return self.imageId
+
+    def getRank(self):
+        return self.rank
     
     def toJSON(self):
         return{
