@@ -15,7 +15,7 @@ def getImage(id):
     image = Image.query.get(id)
     return image
 
-def getImage_JSON(id):
+def getImage_JSOM(id):
     image = Image.query.get(id)
     if image:
         return image.toJSON()
