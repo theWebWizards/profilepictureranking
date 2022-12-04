@@ -11,7 +11,7 @@ def get_feed(id):
     feed = Feed.query.get(id)
     return feed
 
-def get_feed_jsom(id):
+def get_feed_json(id):
     feed = Feed.query.get(id)
     return feed.to_json()
 
