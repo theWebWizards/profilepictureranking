@@ -3,12 +3,12 @@ from datetime import datetime
 
 class Distributor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    num_of_profiles = db.Column(db.Integer, nullable = False)
+    numOfProfiles = db.Column(db.Integer, nullable = False)
     feed = db.relationship("Feed", backref="distributor", lazy=True, cascade="all, delete-orphan")
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, num_of_profiles):
-        self.num_of_profiles = num_of_profiles
+    def __init__(self, numOfProfiles):
+        self.numOfProfiles = numOfProfiles
     
     def getId(self):
         return self.id
@@ -34,6 +34,6 @@ class Distributor(db.Model):
     def to_json(self):
         return {
             "id" :self.id,
-            "num_of_profiles": self.num_of_profiles,
+            "numOfProfiles": self.numOfProfiles,
             "timestamp": self.timestamp
         }
