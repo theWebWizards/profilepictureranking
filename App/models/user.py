@@ -13,6 +13,12 @@ class User(db.Model):
         self.username = username
         self.set_password(password)
 
+    def getId(self):
+        return self.id
+
+    def getUsername(self):
+        return self.username
+
     def toJSON(self):
         return{
             'id': self.id,
