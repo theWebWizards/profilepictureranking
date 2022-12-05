@@ -296,6 +296,55 @@ class ImageIntegrationTests(unittest.TestCase):
         image = getImage(image.id)
         assert image == None
 
+class FeedIntegrationTests(unittest.TestCase):
+
+    def test_CreateFeed(self):
+        feed = create_feed(1,2,3)
+        assert feed is not None
+
+    def test_GetFeed(self):
+        feed = create_feed(1,2,3)
+        feed1 = get_feed(feed.getId())
+        assert feed1 is not None
+
+    def test_GetFeed_json(self):
+        feed = create_feed(1, 2, 3)
+        self.assertDictEqual(
+            get_feed_json(feed.getId()),
+            {
+                "id": feed.getId(),
+                "senderId": 1,
+                "receiverId": 2,
+                "distributorId": feed.getDistributorId(),
+                "seen": False,
+
+            },
+        )
+
+    def test_GetSenderFeeds(self):
+        user = create_user("tom7", "tompass")
+        create_feed(1, user.getId(), 1)
+        create_feed(2, user.getId(), 1)
+        feeds = get_sender_feeds(user.getId())
+        assert len(feeds) == 2
+
+    def test_GetReceiverFeeds(self):
+        user = create_user("tom8", "tompass")
+        create_feed(1, user.getId(), 1)
+        create_feed(2, user.getId(), 1)
+        feeds = get_receiver_feeds(user.getId())
+        assert len(feeds) == 2
+
+    def test_FeedView(self):
+        feed = create_feed(1, 2, 1)
+        feed = feed_view(feed.getId())
+        assert feed.isSeen() is True
+
+    def test_FeedDelete(self):
+        feed = create_feed(1, 2, 1)
+        current = feed_delete(feeed.getId())
+        assert current is True
+
     
 class RatingIntegrationTests(unittest.TestCase):
 
@@ -304,44 +353,40 @@ class RatingIntegrationTests(unittest.TestCase):
         assert rating.id == 1
 
     def test_get_rating(self):
-        rating = get_rating(1)
-        assert rating.creatorId == 1
+        rating = create_rating(1, 2, 3)
+        rating1 = get_rating(rating.getId())
+        assert rating1.getRateeId() == rating.getRateeId()
 
-    def test_get_all_ratings(self):
-        rating = create_rating(2, 1, 4)
-        ratingList = []
-        ratingList.append(get_rating(1))
-        ratingList.append(get_rating(2))
-        self.assertListEqual(get_all_ratings(), ratingList)
+    def test_GetRating_json(self):
+        rating = create_rating(1, 2, 3)
+        self.assertDictEqual(
+            get_rating_json(rating.getId()),
+            {"id": rating.getId(), "raterId": 1, "rateeId": 2, "rating": 3},
+        )
 
-    def test_get_all_ratings_json(self):
-        ratings_json = get_all_ratings_json()
-        self.assertListEqual([{"id":1, "creatorId":1, "targetId": 2, "score":3, "timeStamp": date.today()}, {"id":2, "creatorId":2, "targetId": 1, "score":4, "timeStamp": date.today()}], ratings_json)
+    def test_get_ratings_by_rater(self):
+        user = create_user("tom1", "tompass")
+        create_ranking(user.getId(), 2, 3)
+        create_ranking(user.getId(), 3, 4)
+        ratings = get_ratings_by_rater(user.getId())
+        assert len(rating) == 2
 
-    def test_get_ratings_by_creatorid(self):
-        ratings = get_ratings_by_creator(2)
-        self.assertListEqual(ratings, [{"id":2, "creatorId":2, "targetId": 1, "score":4, "timeStamp": date.today()}])
-
-    def test_get_ratings_by_targetid(self):
-        ratings = get_ratings_by_target(2)
-        self.assertListEqual(ratings, [{"id":1, "creatorId":1, "targetId": 2, "score":3, "timeStamp": date.today()}])
-
-    def test_get_rating_by_actors(self):
-        rating = get_rating_by_actors(1, 2)
-        assert rating.id == 1
+    def test_get_ratings_by_ratee(self):
+        user = create_user("tom2", "tompass")
+        create_rating(1, user.getId(), 3)
+        create_rating(2, user.getId(), 5)
+        ratings = get_ratings_by_ratee(user.getId())
+        assert len(ratings) == 2
 
     def test_update_rating(self):
-        rating = update_rating(1, 5)
-        assert rating.score == 5
+        rating = create_rating(1, 4, 5)
+        rating = update_rating(rating.getId(), 3)
+        assert rating.getRating() == 3
 
-    def test_try_calculate_rating(self):
-        user = create_user("phil", "philpass")
-        rating = create_rating(user.id, 2, 5)
-        calculated = get_calculated_rating(2)
-        assert calculated == 4
-
-    def test_get_level(self):
-        assert get_level(1) == 1
+    def test_delete_rating(self):
+        rating = create_rating(1, 2, 3)
+        current = delete_rating(rating.getId())
+        assert status is True
 
 
 class RankingIntegrationTests(unittest.TestCase):
@@ -351,37 +396,37 @@ class RankingIntegrationTests(unittest.TestCase):
         assert ranking.id == 1
 
     def test_get_ranking(self):
-        ranking = get_ranking(1)
-        assert ranking.creatorId == 1
+        ranking = create_ranking(1, 2, 3)
+        ranking1 = get_ranking(ranking.getId())
+        assert ranking1.getImageId() == ranking.getImageId()
 
-    def test_get_all_rankings(self):
-        ranking = create_ranking(2, 1, 4)
-        rankingList = []
-        rankingList.append(get_ranking(1))
-        rankingList.append(get_ranking(2))
-        self.assertListEqual(get_all_rankings(), rankingList)
+    def test_get_rankings_json(self):
+        ranking = create_ranking(1, 3, 5)
+        self.assertDictEqual(
+            get_ranking_json(ranking.getId()),
+            {"id": ranking.getId(), "rankerId": 1, "imageId": 3. "rank": 5},
+        )
 
-    def test_get_all_rankings_json(self):
-        rankings_json = get_all_rankings_json()
-        self.assertListEqual([{"id":1, "creatorId":1, "imageId": 2, "score":3}, {"id":2, "creatorId":2, "imageId": 1, "score":4}], rankings_json)
-
-    def test_get_rankings_by_creatorid(self):
-        rankings = get_rankings_by_creator(2)
-        self.assertListEqual(rankings, [{"id":2, "creatorId":2, "imageId": 1, "score":4}])
+    def test_get_ranking_by_user(self):
+        user = create_user("tim1", "timpass")
+        create_ranking(user.getId(), 3, 4)
+        create_ranking(user.getId(), 2, 5)
+        rankings = get_rankings_by_ranker(user.getId())
+        assert len(rankings) == 0
 
     def test_get_rankings_by_imageid(self):
         rankings = get_rankings_by_image(2)
         self.assertListEqual(rankings, [{"id":1, "creatorId":1, "imageId": 2, "score":3}])
 
-    def test_get_ranking_by_actors(self):
-        ranking = get_ranking_by_actors(1, 2)
-        assert ranking.id == 1
-
     def test_update_ranking(self):
-        ranking = update_ranking(1, 5)
-        assert ranking.score == 5
+        ranking = create_ranking(1, 2, 4)
+        ranking = update_ranking(ranking.getId(), 2)
+        assert ranking.getRank() == 2
 
-    def test_try_calculate_ranking(self):
-        ranking = create_ranking(3, 2, 5)
-        calculated = get_calculated_ranking(2)
-        assert calculated == 4
+    def test_delete_ranking(self):
+        ranking = create_ranking(1, 3, 4)
+        current = delete_ranking(ranking.getId())
+        assert stats is True
+
+
+   
