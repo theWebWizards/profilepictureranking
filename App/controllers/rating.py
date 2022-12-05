@@ -17,7 +17,7 @@ def get_ratings_by_rater(raterId):
 
 def get_ratings_by_rater_json(raterId):
     ratings = Rating.query.filter_by(raterId=raterId).all()
-    return [rating.toJSON() for rating in ratings]
+    return [rating.to_json() for rating in ratings]
 
 def get_ratings_by_ratee(rateeId):
     ratings = Rating.query.filter_by(rateeId=rateeId).all()
@@ -25,7 +25,7 @@ def get_ratings_by_ratee(rateeId):
 
 def get_ratings_by_ratee_json(rateeId):
     ratings = Rating.query.filter_by(rateeId=rateeId).all()
-    return [rating.toJSON() for rating in ratings]
+    return [rating.to_json() for rating in ratings]
 
 def get_rating(id):
     rating = Rating.query.get(id)
@@ -41,7 +41,7 @@ def get_all_ratings():
 
 def get_all_ratings_json():
     ratings = Rating.query.all()
-    return [rating.toJSON() for rating in ratings]
+    return [rating.to_json() for rating in ratings]
 
 def update_rating(id, rating):
     rating = Rating.query.get(id)

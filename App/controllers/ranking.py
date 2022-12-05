@@ -24,12 +24,16 @@ def get_ranking(id):
     ranking = Ranking.query.get(id)
     return ranking
 
+def get_ranking_json():
+    ranking = Ranking.query.get(id)
+    return ranking.to_json()
+
 def get_all_rankings():
     return Ranking.query.all()
 
 def get_all_rankings_json():
     rankings = Ranking.query.all()
-    return [ranking.toJSON() for ranking in rankings]
+    return [ranking.to_json() for ranking in rankings]
 
 def get_rankings_by_ranker(rankerId):
     rankings = Ranking.query.filter_by(rankerId=rankerId).all()
@@ -37,7 +41,7 @@ def get_rankings_by_ranker(rankerId):
 
 def get_rankings_by_ranker_json(rankerId):
     rankings = Ranking.query.filter_by(creatorId=creatorId).all()
-    return [ranking.toJSON() for ranking in rankings]
+    return [ranking.to_json() for ranking in rankings]
 
 def get_rankings_by_image(imageId):
     rankings = Ranking.query.filter_by(imageId=imageId).all()
@@ -45,7 +49,7 @@ def get_rankings_by_image(imageId):
 
 def get_rankings_by_image_json(imageId):
     rankings = Ranking.query.filter_by(imageId=imageId).all()
-    return [ranking.toJSON() for ranking in rankings]
+    return [ranking.to_json() for ranking in rankings]
 
 def update_ranking(id, rank):
     ranking = Ranking.query.get(id)

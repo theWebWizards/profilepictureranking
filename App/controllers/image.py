@@ -18,7 +18,7 @@ def getImage(id):
 def getImage_JSON(id):
     image = Image.query.get(id)
     if image:
-        return image.toJSON()
+        return image.to_json()
     return[]
 
 def getAllImages():
@@ -27,7 +27,7 @@ def getAllImages():
 
 def getAllImages_JSON():
     images = Image.query.all()
-    return[image.toJSON() for image in images]
+    return[image.to_json() for image in images]
 
 def getImagesByUser(userId):
     images = Image.query.filter_by(userId = userId).all()
@@ -35,7 +35,7 @@ def getImagesByUser(userId):
 
 def getImagesByUser_JSON(userId):
     images = Image.query.filter_by(userId = userId).all()
-    return[image.toJSON() for image in images]
+    return[image.to_json() for image in images]
 
 def getAverageImageRank(imageId):
     image = getImage(imageId)
@@ -51,7 +51,7 @@ def getImageRanking(imageId):
 
 def getImageRankingJSON(imageId):
     rank = getImageRanking(imageId)
-    return[ranking.toJSON() for ranking in rank]
+    return[ranking.to_json() for ranking in rank]
 
 def deleteImage(id):
     image = getImage(id)

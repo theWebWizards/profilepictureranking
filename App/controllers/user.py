@@ -19,7 +19,7 @@ def get_user(id):
 def get_user_json(id):
     user = get_user(id)
     if user:
-        return user.toJSON()
+        return user.to_json()
     return None
 
 def get_all_users():
@@ -29,7 +29,7 @@ def get_all_users_json():
     users = User.query.all()
     if not users:
         return []
-    users = [user.toJSON() for user in users]
+    users = [user.to_json() for user in users]
     return users
 
 def update_user(id, username):

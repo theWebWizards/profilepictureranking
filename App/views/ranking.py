@@ -3,91 +3,89 @@ from flask_jwt import jwt_required
 
 
 from App.controllers import (
-    create_ranking, 
+    create_ranking,
+    get_rankings_by_ranker,
+    get_rankings_by_image,
+    get_ranking,
+    get_ranking_json,
     get_all_rankings,
     get_all_rankings_json,
-    get_ranking,
+    get_rankings_by_ranker,
+    get_rankings_by_ranker_json,
     get_rankings_by_image,
-    get_rankings_by_creator,
-    get_ranking_by_actors,
-    get_calculated_ranking,
+    get_rankings_by_image_json,
     update_ranking,
-    #delete_ranking,
+    delete_ranking,
     get_user,
-    get_image
+    getImage
 )
 
 ranking_views = Blueprint('ranking_views', __name__, template_folder='../templates')
 
 @ranking_views.route('/api/rankings', methods=['POST'])
+@jwt_required()
 def create_ranking_action():
     data = request.json
-    if get_user(data['creatorId']) and get_image(data['imageId']):
-        image = get_image(data['imageId'])
-        if data['creatorId'] != image.userId:
+    if get_user(data['rankerId']) and get_image(data['imageId']):
+        ranking = create_ranking(data["rankerId"], data["imageId"], data["rank"])
+        return jsonify(get_all_rankings_json(ranking.getId())), 201
+    elif not get_user(data["rankerId"]):
+        return jsonify ({"message": "This ranker does not exist"}), 404
+    elif not getImage(data["imageId"]):
+        return jsonify ({"message": "This image does not exist."}), 404
+    else: 
+        return jsonify ({"message" : "Error"}), 500
 
-            prev = get_ranking_by_actors(data['creatorId'], data['imageId'])
-            if prev:
-                return jsonify({"message":"Current user already ranked this image"}) 
-            ranking = create_ranking(data['creatorId'], data['imageId'], data['score'])
-            return jsonify({"message":"Ranking created"}) 
-
-        return jsonify({"message":"User cannot rank self"})
-    return jsonify({"message":"User not found"}) 
-
-@ranking_views.route('/api/rankings', methods=['GET'])
-def get_all_rankings_action():
-    rankings = get_all_rankings_json()
-    return jsonify(rankings)
-
-@ranking_views.route('/api/rankings/byid', methods=['GET'])
-def get_ranking_action():
-    data = request.json
-    ranking = get_ranking(data['id'])
+@ranking_views.route('/api/ranking/<int:id>', methods=['GET'])
+@jwt_required()
+def get_ranking_action(id):
+    ranking = get_ranking(id)
     if ranking:
-        return ranking.toJSON()
-    return jsonify({"message":"Ranking Not Found"})
+        return jsonify(get_ranking_json(id)), 200
+    else: 
+        return jsonify({"message": "Does not exist."}), 404
 
-@ranking_views.route('/api/rankings/bycreator', methods=['GET'])
-def get_rankings_by_creator_action():
+@ranking_views.route('/api/rankings/ranker/<int: rankerId>', methods=['GET'])
+@jwt_required()
+def get_rankings_by_ranker_action(rankerId):
+    user = get_user(rankerId)
+    if not user:
+        return jsonify({"message": "This ranker does not exist"})
+    rankings = get_rankings_by_ranker(rankerId)
+    if rankings:
+        return jsonify(get_rankings_by_ranker_json(rankerId)), 200
+    return jsonify({"message":"Rankings Not Found"}), 404
+
+@ranking_views.route('/api/rankings/image/<int: imageId>', methods=['GET'])
+@jwt_required()
+def get_rankings_by_image_action(imageId):
+    image = getImage(imageId)
+    if not image:
+        return jsonify({"message": "This image does not exist"}), 404
+    rankings = get_rankings_by_image(imageId)
+    if rankings:
+       return jsonify(get_rankings_by_image_json(imageId)), 200
+    else:
+        return jsonify({"message":"These rankings do not exist"}), 404
+
+@ranking_views.route('/api/rankings/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_ction(id):
     data = request.json
-    if get_user(data['creatorId']):
-        ranking = get_rankings_by_creator(data['creatorId'])
-        if ranking:
-            return jsonify(ranking)
-    return jsonify({"message":"User Not Found"})
+    status = update_ranking(id, data["rank"])
+    if status:
+       return jsonify(get_rankings_by_image(id)), 200
+    else:
+        return jsonify({"message": "This ranking does not exist."})
 
-@ranking_views.route('/api/rankings/byimage', methods=['GET'])
-def get_rankings_by_image_action():
-    data = request.json
-    if get_image(data['imageId']):
-        ranking = get_rankings_by_image(data['imageId'])
-        if ranking:
-            return jsonify(ranking)
-    return jsonify({"message":"Image Not Found"})
 
-@ranking_views.route('/api/rankings', methods=['PUT'])
-def update_ranking_action():
-    data = request.json
-    ranking = update_ranking(data['id'], data['score'])
-    if ranking:
-        return jsonify({"message":"Ranking updated"})
-    return jsonify({"message":"Ranking not found"})
+@ranking_views.route('/api/rankings/<int: id>', methods=['DELETE'])
+@jwt_required()
+def delete_ranking_action(id):
+    curr = delete_ranking(id)
+    if curr:
+        return jsonify({"message": "Ranking was deleted"}), 200
+    else:
+        return jsonify({"message": "This ranking does not exist"}), 404
+     
 
-# @ranking_views.route('/api/rankings', methods=['DELETE'])
-# def delete_ranking_action():
-#     data = request.json
-#     if get_ranking(data['id']):
-#         delete_ranking(data['id'])
-#         return jsonify({"message":"Ranking deleted"}) 
-#     return jsonify({"message":"Ranking not found"}) 
-
-@ranking_views.route('/api/rankings/calc', methods=['GET'])
-def get_calculated_ranking_action():
-    data = request.json
-    if get_image(data['imageId']):
-        ranking = get_calculated_ranking(data['imageId'])
-        if ranking:
-            return jsonify({"calculated_ranking": ranking}) 
-        return jsonify({"message":"No rankings by this image found"})
-    return jsonify({"message":"Image not found"})
