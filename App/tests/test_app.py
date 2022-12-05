@@ -65,9 +65,6 @@ from App.controllers.ranking import (
 
     ) 
 
- 
-
-
 from wsgi import app
 
 
@@ -78,14 +75,13 @@ LOGGER = logging.getLogger(__name__)
 '''
 class UserUnitTests(unittest.TestCase):
 
-    def test_new_user(self):
+    def test_create_user(self):
         user = User("bob", "bobpass")
-        assert user.username == "bob"
+        self.assertEqual (user.username) == "bob"
 
     def test_toJSON(self):
-        user = User("bob", "bobpass")
-        user_json = user.toJSON()
-        self.assertDictEqual(user_json, {"id":None, "username":"bob", "images": [], "ratings": []})
+        user = User("bob1", "bobpass")
+        self.assertDictEqual( user.to_json(), {"id": None, "username": "bob1", "images": []})
     
     def test_hashed_password(self):
         password = "mypass"
@@ -101,14 +97,28 @@ class UserUnitTests(unittest.TestCase):
 class ImageUnitTests(unittest.TestCase):
 
     def test_new_image(self):
-        image = Image(1)
-        assert image.rankings == []
+        user = User("rob", "robpass")
+        image = Image(user.id, "https://via.placeholder.com/150x200")
+        assert image.userId == user.id
 
-    def test_toJSON(self):
-        image = Image(1)
-        image_json = image.toJSON()
-        self.assertDictEqual(image_json, {"id":None, "rankings":[], "userId": 1})
+    def test_to_json(self):
+        user = User("rob1", "robpass")
+        image = Image(user.id, "https://via.placeholder.com/150x200")
+        self.assertDictEqual(
+            image.toJSON(),
+            {
+                "id": image.id,
+                "userId": user.id,
+                "rank": 0,
+                "num_rankings": 0,
+                "url": "https://via.placeholder.com/150x200",
+            },
+        )
 
+    def test_get_average_rank(self):
+        image = Image(1, "https://via.placeholder.com/150x200")
+        assert image.getAverageRank() == 0
+    
 class RatingUnitTests(unittest.TestCase):
 
     def test_new_rating(self):
@@ -131,6 +141,48 @@ class RankingUnitTests(unittest.TestCase):
         ranking_json = ranking.toJSON()
         self.assertDictEqual(ranking_json, {"id":None, "creatorId":1, "imageId": 2, "score":3})
 
+
+class FeedUnitTests(unittest.TestCase):
+    def test_new_feed(self):
+        feed = Feed(1, 2, 3)
+        assert feed.distributorId == 3
+
+    def test_to_json(self):
+        feed = Feed(1, 2, 3)
+        self.assertDictEqual(
+            feed.to_json(),
+            {
+                "id": feed.id,
+                "senderId": 1,
+                "receiverId": 2,
+                "distributorId": 3,
+                "seen": False,
+            },
+        )
+
+    def test_setSeen(self):
+        feed = Feed(1, 2, 3)
+        feed.setSeen()
+        assert feed.seen is True
+
+
+class DistributorUnitTests(unittest.TestCase):
+    def test_new_distributor(self):
+        distributor = Distributor(5)
+        assert distributor.numOfProfiles == 5
+
+    def test_to_json(self):
+        distributor = Distributor(5)
+        self.assertDictEqual(
+            distributor.to_json(),
+            {
+                "id": distributor.id,
+                "numOfProfiles": 5,
+                "timestamp": distributor.timestamp,
+            },
+        )
+
+
 '''
     Integration Tests
 '''
@@ -142,8 +194,7 @@ def empty_db():
     app.config.update({'TESTING': True, 'SQLALCHEMY_DATABASE_URI': 'sqlite:///test.db'})
     create_db(app)
     yield app.test_client()
-    os.unlink(os.getcwd()+'/App/test.db')
-
+ 
 def test_authenticate():
         user = create_user("bob", "bobpass")
         assert authenticate("bob", "bobpass") != None
