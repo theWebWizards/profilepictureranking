@@ -1,6 +1,6 @@
 from App.models import Ranking, User, Image
 from App.database import db
-from App.controllers import get_user, get_image
+from App.controllers import get_user, getImage
 
 def create_ranking(rankerId, imageId, rank):
     image = get_image(imageId)

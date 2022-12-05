@@ -6,7 +6,7 @@ from datetime import date
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     raterId =  db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    rateeId = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    ratedId = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     rater = db.relationship("User", foreign_keys=[raterId])
     ratee = db.relationship("User", foreign_keys =[ratedId])
     rating = db.Column(db.Integer, nullable=False)

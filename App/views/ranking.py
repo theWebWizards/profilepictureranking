@@ -45,7 +45,7 @@ def get_ranking_action(id):
     else: 
         return jsonify({"message": "Does not exist."}), 404
 
-@ranking_views.route('/api/rankings/ranker/<int: rankerId>', methods=['GET'])
+@ranking_views.route('/api/rankings/ranker/<int:rankerId>', methods=['GET'])
 @jwt_required()
 def get_rankings_by_ranker_action(rankerId):
     user = get_user(rankerId)
@@ -56,7 +56,7 @@ def get_rankings_by_ranker_action(rankerId):
         return jsonify(get_rankings_by_ranker_json(rankerId)), 200
     return jsonify({"message":"Rankings Not Found"}), 404
 
-@ranking_views.route('/api/rankings/image/<int: imageId>', methods=['GET'])
+@ranking_views.route('/api/rankings/image/<int:imageId>', methods=['GET'])
 @jwt_required()
 def get_rankings_by_image_action(imageId):
     image = getImage(imageId)
@@ -79,7 +79,7 @@ def update_ction(id):
         return jsonify({"message": "This ranking does not exist."})
 
 
-@ranking_views.route('/api/rankings/<int: id>', methods=['DELETE'])
+@ranking_views.route('/api/rankings/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_ranking_action(id):
     curr = delete_ranking(id)

@@ -7,13 +7,13 @@ from App.controllers import (
     get_all_users,
     get_all_users_json,
     get_user,
-    get_user_by_username,
+    getUserbyUsername,
     update_user,
     delete_user,
     login_user,
     logout_user,
-    get_level,
-    authenticate
+ #   get_level,
+    authenticate,
 )
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
@@ -31,7 +31,7 @@ def static_user_page():
 @user_views.route('/api/users', methods=['POST'])
 def create_user_action():
     data = request.json
-    user = get_user_by_username(data['username'])
+    user = getUserbyUsername(data['username'])
     if user:
         return jsonify({"message":"Username Already Taken"}) 
     user = create_user(data['username'], data['password'])

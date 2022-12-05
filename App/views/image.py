@@ -8,13 +8,13 @@ from App.controllers import (
     getImage_JSON,
     getAllImages,
     getAllImages_JSON,
-    getImagesbyUser,
-    getImagesbyUser_JSON,
+    getImagesByUser,
+    getImagesByUser_JSON,
     getAverageImageRank,
     getImageRanking,
     getImageRankingJSON,
     deleteImage,
-    get_user
+    get_user,
 )
 
 image_views = Blueprint('image_views', __name__, template_folder='../templates')
@@ -38,7 +38,7 @@ def get_images_action(id):
         return jsonify(getImage_JSON(id)),200
     return jsonify ({"message": "This image was not found"}), 404
 
-@image_views.route('/api/image/user/<int: userId>', methods=['GET'])
+@image_views.route('/api/image/user/<int:userId>', methods=['GET'])
 @jwt_required()
 def get_images_by_user_action(userId):
     user = get_user(userId)
@@ -49,7 +49,7 @@ def get_images_by_user_action(userId):
         return jsonify(getImagesbyUser_JSON(userId)), 200
     return jsonify({"message": "There are no images by this user."}), 404
 
-@image_views.route('/api/image/<int: imageId>/rank', methods=['GET'])
+@image_views.route('/api/image/<int:imageId>/rank', methods=['GET'])
 @jwt_required()
 def getAverageImageRank(imageId):
     image= getImage(imageId)
@@ -57,7 +57,7 @@ def getAverageImageRank(imageId):
         return jsonify(getImageRankingJSON(imageId)), 200
     return jsonify({"message": "This image was not found"}), 404
 
-@image_views.route('/api/image/<int: id>', methods=['DELETE'])
+@image_views.route('/api/image/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_image_action():
     curr = deleteImage(id)

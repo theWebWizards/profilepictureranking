@@ -12,7 +12,7 @@ from App.controllers import (
     get_rating_json,
     get_all_ratings,
     get_all_ratings_json,
-    update_json,
+    update_rating,
     delete_rating,
     get_user
 )
@@ -34,7 +34,7 @@ def create_rating_action():
     else:
         return jsonify({"message": "An error occurred."}), 500
 
-@rating_views.route('/api/ratings/<int: id>', methods=['GET'])
+@rating_views.route('/api/ratings/<int:id>', methods=['GET'])
 @jwt_required()
 def get_rating_action(id):
     rating = get_rating(id)
@@ -43,7 +43,7 @@ def get_rating_action(id):
     else:
         return jsonify({"message": "This rating does not exist"}), 404
 
-@rating_views.route('/api/ratings/rater/<int:rater_id', methods=['GET'])
+@rating_views.route('/api/ratings/rater/<int:raterId>', methods=['GET'])
 @jwt_required()
 def get_rating_by_rater_action(raterId):
     rating = get_ratings_by_rater(raterId)
@@ -51,7 +51,7 @@ def get_rating_by_rater_action(raterId):
         return jsonify(get_ratings_by_rater_json(raterId)), 200
     return jsonify({"message":"Rating not found"}), 404 
 
-@rating_views.route('/api/ratings/rater/<int:ratee_id', methods=['GET'])
+@rating_views.route('/api/ratings/rater/<int:ratee_id>', methods=['GET'])
 @jwt_required()
 def get_rating_by_ratee_action(rateeId):
     rating = get_ratings_by_ratee(rateeId)
