@@ -1,20 +1,41 @@
-import os, tempfile, pytest, logging, unittest
-from werkzeug.security import check_password_hash, generate_password_hash
+import pytest, logging, unittest
+from werkzeug.security import generate_password_hash
 from flask import jsonify
 from datetime import date, datetime
 
-from App.main import create_app
+#from App.main import create_app
 from App.database import create_db
 from App.models import User, Image, Rating, Ranking
-from App.controllers import (
+from App.controllers.auth import authenticate
+
+from App.controllers.distributor import(
+    create_distributor,
+    get_distributor,
+    get_distributor_json,
+    delete_distributor,
+    )
+
+from App.controllers.feed import (
+    create_feed,
+    get_feed,
+    get_feeds_by_receiver,
+    get_feeds_by_sender,
+    get_feed_json,
+    view_feed,
+    delete_feed,
+)
+
+from App.controllers.user import (
     create_user,
     get_user,
-    get_user_by_username,
+    getUserbyUsername,
     get_all_users,
     get_all_users_json,
     update_user,
     delete_user,
+    )
 
+from App.controllers.image import (   
     create_image,
     get_all_images,
     get_all_images_json,
@@ -22,30 +43,30 @@ from App.controllers import (
     get_image,
     get_image_json,
     delete_image,
+    )
 
-    create_rating, 
-    get_all_ratings,
-    get_all_ratings_json,
+from App.controllers.rating import (   
+    create_rating,
     get_rating,
-    get_ratings_by_target,
-    get_ratings_by_creator,
-    get_rating_by_actors,
+    get_rating_json,
+    get_ratings_by_ratee,
+    get_ratings_by_rater,
     update_rating,
-    get_calculated_rating,
-    get_level,
+    delete_rating,
+    )
 
+from App.controllers.ranking import (
     create_ranking, 
-    get_all_rankings,
-    get_all_rankings_json,
     get_ranking,
+    get_rankings_by_ranker,
     get_rankings_by_image,
-    get_rankings_by_creator,
-    get_ranking_by_actors,
-    get_calculated_ranking,
     update_ranking,
+    delete_ranking,
 
-    authenticate
-)
+    ) 
+
+ 
+
 
 from wsgi import app
 
@@ -166,32 +187,62 @@ class UsersIntegrationTests(unittest.TestCase):
 class ImageIntegrationTests(unittest.TestCase):
 
     def test_create_image(self):
-        image = create_image(2)
-        assert image.id == 1
+        user = create_user("tom1", "tompass")
+        image = createImage(user.getId(), "https://via.placeholder.com/150x200")
+        assert image.getUserId() == user.getId()()
 
     def test_get_image(self):
-        image = get_image(1)
-        assert image.userId == 2
+        user = create_user("tom2", "tompass")
+        image = createImage(user.getId(), "https://via.placeholder.com/150x200")
+        image2 = get_image(image.getId())
+        assert image2.getURL() == image.getURL()
+
+
+    def test_get_image_json(self):
+        user = create_user("tom3", "tompass")
+        image = createImage(user.getId()(), "https://via.placeholder.com/150x200")
+        self.assertDictEqual(
+            get_image_json(image.getId()),
+            {
+                "id": image.getId(),
+                "user_id": user.getId(),
+                "rank": 0,
+                "num_rankings": 0,
+                "url": "https://via.placeholder.com/150x200",
+            },
+        )    
 
     def test_get_all_images(self):
-        image = create_image(1)
+        image = createImage(1)
         imageList = []
-        imageList.append(get_image(1))
-        imageList.append(get_image(2))
-        self.assertListEqual(get_all_images(), imageList)
+        imageList.append(getImage(1))
+        imageList.append(getImage(2))
+        self.assertListEqual(getAllImages(), imageList)
 
     def test_get_all_images_json(self):
-        images_json = get_all_images_json()
+        images_json = getAllImages_JSON()
         self.assertListEqual([{"id":1, "rankings":[], "userId": 2}, {"id":2, "rankings":[], "userId": 1}], images_json)
 
-    def test_get_images_by_userid_json(self):
-        images_json = get_images_by_userid_json(2)
-        self.assertListEqual(images_json, [{"id":1, "rankings":[], "userId": 2}])
+    def test_getAverageImageRank(self):
+        user = create_user("tom5", "tompass")
+        user2 = create_user("tom6", "tompass")
+        image = createImage(user.get_id(), "https://via.placeholder.com/150x200")
+        create_ranking(user2.getId(), image.getId(), 1)
+        create_ranking(user2.getId(), image.getId(), 3)
+        average_rank = test_getAverageImageRank(image.get_id())
+        assert average_rank == 2
 
-    def test_delete_image(self):
+    def test_getImagesByUser(self):
+        user = create_user("tom4", "tompass")
+        create_image(user.getId(), "https://via.placeholder.com/150x200")
+        create_image(user.getId(), "https://via.placeholder.com/150x200")
+        images = getImagesByUser(user.get_id())
+        assert len(images) == 2
+
+    def test_deleteImage(self):
         image = create_image(1)
-        delete_image(image.id)
-        image = get_image(image.id)
+        deleteImage(image.id)
+        image = getImage(image.id)
         assert image == None
 
     

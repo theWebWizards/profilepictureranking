@@ -168,7 +168,7 @@ def get_dist_table():
 
         return table
 
-def get_seen_dist_table():
+def get_completed_dist_table():
     distributors = get_all_distributors()
     table = {0: {"Feed ID", "Receiver", "Sender", "Distributor", "Seen"}}
 
@@ -185,7 +185,7 @@ def get_seen_dist_table():
                 }
     return table
 
-def get_unseen_dist_table():
+def get_incomplete_dist_table():
     distributors = get_all_distributors()
     table = {0: {"Feed ID", "Receiver", "Sender", "Distributor", "Seen"}}
 
