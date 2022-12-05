@@ -391,9 +391,10 @@ class RatingIntegrationTests(unittest.TestCase):
 
 class RankingIntegrationTests(unittest.TestCase):
 
-    def test_create_rating(self):
-        ranking = create_ranking(1, 2, 3)
-        assert ranking.id == 1
+    def test_create_ranking(self):
+        image = create_image(1, "https://via.placeholder.com/150x200")
+        ranking = create_ranking(1, image.getId, 4)
+        assert ranking.getImageId() == image.getId()
 
     def test_get_ranking(self):
         ranking = create_ranking(1, 2, 3)
@@ -404,7 +405,7 @@ class RankingIntegrationTests(unittest.TestCase):
         ranking = create_ranking(1, 3, 5)
         self.assertDictEqual(
             get_ranking_json(ranking.getId()),
-            {"id": ranking.getId(), "rankerId": 1, "imageId": 3. "rank": 5},
+            {"id": ranking.getId(), "rankerId": 1, "imageId": 3, "rank": 5},
         )
 
     def test_get_ranking_by_user(self):
@@ -414,9 +415,12 @@ class RankingIntegrationTests(unittest.TestCase):
         rankings = get_rankings_by_ranker(user.getId())
         assert len(rankings) == 0
 
-    def test_get_rankings_by_imageid(self):
-        rankings = get_rankings_by_image(2)
-        self.assertListEqual(rankings, [{"id":1, "creatorId":1, "imageId": 2, "score":3}])
+    def test_get_rankings_by_image(self):
+        image = create_image(1, "https://via.placeholder.com/150x200")
+        create_ranking(3, image.getId(), 4)
+        create_ranking(4, image.getId(), 5)
+        rankings = get_rankings_by_image(image.getId())
+        assert len(rankings) == 3
 
     def test_update_ranking(self):
         ranking = create_ranking(1, 2, 4)
