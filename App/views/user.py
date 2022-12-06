@@ -108,3 +108,18 @@ def loginAction():
     login_user(permittedUser,remember=True)
     flash('You were successfully logged in!')
     return redirect(url_for('distributer_views.view_profiles_again'))
+
+#signup routes
+@user_views.route('/signup',methods=['GET'])
+def getSignUpPage():
+    return render_template('signup.html')
+
+@user_views.route('/signup',methods=['POST'])
+def signupAction():
+    data = request.form
+    user = getUserbyUsername(data['username'])
+    if user:
+        flash("Username taken please try a new username")
+        return redirect(url_for('user_views.getSignUpPage'))
+    user = create_user(data['username'], data['password'])
+    return redirect(url_for('user_views.getLoginPage'))

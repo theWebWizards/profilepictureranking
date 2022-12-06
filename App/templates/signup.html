@@ -1,0 +1,116 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url("{{ url_for('static', filename='waves.png') }}") ;
+    background-size:cover;
+  }
+  * {box-sizing: border-box}
+
+  input {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+  }
+
+  input:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+
+  .button {
+    text-align: center;
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin-top: 1%;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .button:hover {
+    opacity:0.8;
+  }
+
+  .imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+.top-row{
+  margin-top: 3%;
+  background-color: white;
+}
+
+
+.avatar {
+  width: 24%;
+  border-radius: 50%;
+  
+  
+}
+
+</style>
+</head>
+{% extends "layout.html" %}
+{% block title %}Profile Picture Voting{% endblock %}
+{% block page %}Profile Picture Voting{% endblock %}
+{{ super() }}
+
+
+    {% block content %}
+    
+
+    <div class="tab-content">
+      <div id="signup">   
+        <h3 style="font-family: 'Playball', cursive;" class="center">Sign Up</h3>
+        <div style="margin-bottom:20px" class="divider #2196f3 blue"></div> 
+
+        <div class="imgcontainer">
+
+        <img class="avatar" src="static/form.png">
+
+        </div>
+
+        <h5 class="center">Create an account to get started.</h5>
+
+        
+        <form action="/signup" method="post">
+        
+        <div class="top-row">
+          <div class="field-wrap">
+            <label style="color:black">
+              Username<span class="req">*</span>
+            </label>
+            <input id="username" name="username" type="text" required autocomplete="off" />
+          </div>
+        
+        <div class="field-wrap">
+          <label style="color:black">
+            Create Password<span class="req">*</span>
+          </label>
+          <input id="password" name="password" type="password"required autocomplete="off"/>
+        </div>
+        
+        <button type="submit" class="button button-block #1565c0 blue darken-3">Sign Up</button>
+        
+        </form>
+        
+          <a href="/" type="button"   style="margin-top:1% ;" class="button button-block">  Go Back </a>
+        
+        
+      
+    </div>
+    </div>
+    
+    
+    {% endblock %}
+</html>   
+
+    
