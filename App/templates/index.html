@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Web Wizards Ranking{% endblock %}
-{% block page %}Web Wizards Ranking {% endblock %}
+{% block page %}Web Wizards Ranking{% endblock %}
 
 {{ super() }}
 
@@ -17,18 +17,19 @@
 <!--background designed using Haikei wave templates https://app.haikei.app -->
 
 <div class="center">
-    <h3 style="font-family: 'Playball', cursive;">Welcome, new User!</h3>
+    <h3 style="font-family: 'Brush Script MT', cursive;">Welcome, To Web Wizards Picture Ranking Site</h3>
     
-    <div style="margin-bottom:20px" class="divider #2196f3 blue"></div> 
+    <div style="margin-bottom:20px" ></div> 
 
     
-              <img style="max-height:50vh" class="responsive-img" src="static/couple.jpg">
+              <img style="max-height:50vh" class="responsive-img" src="/static/welcome screen.jpg">
             
 
-      <h5 style="margin-bottom:20px">Select an option to get started.</h5>
+      <h5 style="margin-bottom:20px">Login or Signup to continue! </h5>
     
       
-      <a style="margin-right:15px" href="/login" method="GET" class="#1565c0 blue darken-3 waves-effect waves-light btn" >Login</a>
+      <a style="margin-right:15px" href="/login" method="GET" >Login</a>
+
       <a  href="/signup" method="GET" class="#1565c0 blue darken-3 waves-effect waves-light btn" >Sign Up</a>
 </div>
 {% endblock %}
