@@ -62,7 +62,7 @@ def create_app(config={}):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['PREFERRED_URL_SCHEME'] = 'https'
-    app.config['UPLOADED_PHOTOS_DEST'] = "App/uploads"
+    app.config['UPLOADED_PHOTOS_DEST'] = 'App/uploads'
     photos = UploadSet('photos', TEXT + DOCUMENTS + IMAGES)
     configure_uploads(app, photos)
     add_views(app, views)
