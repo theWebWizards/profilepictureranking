@@ -84,7 +84,7 @@ def update_user_action():
      else:
         return jsonify({"message":"User not found"}), 404 
 
-@user_views.route('/api/users/<int: id>', methods=['DELETE'])
+@user_views.route('/api/users/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_user_action(id):
     user = get_user(id)
