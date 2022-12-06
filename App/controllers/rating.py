@@ -27,6 +27,15 @@ def get_ratings_by_ratee_json(rateeId):
     ratings = Rating.query.filter_by(rateeId=rateeId).all()
     return [rating.to_json() for rating in ratings]
 
+def get_average_rate_by_ratee(rateeId):
+    ratings = Rating.query.filter_by(rateeId=rateeId).all()
+    if ratings:
+        sum = 0
+        for rating in ratings:
+            sum += rating.get_rating()
+        return round(total/len(ratings))
+    return Non
+
 def get_rating(id):
     rating = Rating.query.get(id)
     return rating
