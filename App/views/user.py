@@ -92,3 +92,19 @@ def delete_user_action(id):
         delete_user(id)
         return jsonify({"message":"User Deleted"}) , 200
     return jsonify({"message":"User Not Found"}) , 404
+
+#login routes
+@user_views.route('/login',methods=['GET'])
+def getLoginPage():
+    return render_template('login.html')
+
+@user_views.route('/login',methods=['POST'])
+def loginAction():
+    data=request.form
+    permittedUser=authenticate(data['username'], data['password'])
+    if permittedUser==None:
+        flash("Wrong Credentials, Please try again")
+        return redirect(url_for('user_views.getLoginPage'))
+    login_user(permittedUser,remember=True)
+    flash('You were successfully logged in!')
+    return redirect(url_for('distributer_views.view_profiles_again'))

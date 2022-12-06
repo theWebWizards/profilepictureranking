@@ -1,62 +1,9 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-image: url("{{ url_for('static', filename='waves.png') }}") ;
-    background-size:cover;
-  }
 
-  form {border: 3px solid #f1f1f1;}
-  form {border: 3px solid #f1f1f1;
-    background-color:white;
-  }
-
-  input {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-  
-  .button {
-    text-align: center;
-    background-color: #04AA6D;
-    color: white;
-    padding: 14px 20px;
-    margin-top: 1%;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  .button:hover {
-    opacity:0.8;
-  }
-  .imgcontainer {
-  text-align: center;
-  margin: 24px 0 12px 0;
-}
-
-img.avatar {
-  width: 40%;
-  width: 15%;
-  border-radius: 50%;
-
-
-}
-
-
-
-.container {
-  padding: 16px;
-}
-  
-</style>
 </head>
+
 {% extends "layout.html" %}
 {% block title %}Profile Picture Voting{% endblock %}
 {% block page %}Profile Picture Voting{% endblock %}
@@ -67,7 +14,7 @@ img.avatar {
       <h3 style="font-family: 'Playball', cursive;" class="center">Sign Up</h3>
         <div style="margin-bottom:20px" class="divider #2196f3 blue"></div> 
       <div class="imgcontainer">
-        <img src="static/Avatar.png" alt="Avatar" class="avatar">
+      
       </div>
 
       <h5  class="center">Welcome Back, User!</h5>
