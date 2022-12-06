@@ -2,7 +2,7 @@ from App.models import User
 from App.database import db
 
 def create_user(username, password):
-    user = get_user_by_username(username)
+    user = getUserbyUsername(username)
     if not user:
         newuser = User(username=username, password=password)
         db.session.add(newuser)
