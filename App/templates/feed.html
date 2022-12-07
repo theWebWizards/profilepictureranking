@@ -1,125 +1,70 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>homepage</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-indigo.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
+{% extends "layout.html" %}
+{% block title %}Profile Feed{% endblock %}
+{% block page %}Feed{% endblock %}
 
-</style>
-<style>
-body {
-  background-color: indigo;
-}
-</style>
-</head>
-<body class="w3-theme-l5">
-    <style>
-        body {
-          background-color: indigo;
-        }
-        
-        </style>
+{{ super() }}
 
-<!-- Navbar -->
-<div  class="w3-top">
- <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
-  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-indigo w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Home feed</a>
-  <a href="#" class ="w3-bar-item w3-button w3-hide-medium w3-center w3-padding-large w3-hover-indigo" title="Ranking"><i class="fa fa-signal" aria-hidden="true"></i>  Top Ranking Profiles</a>
-
-  
-  <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-indigo" title="Account Settings"><i class="fa fa-user"></i>  Profile</a>
-  
-
- <a href="#" class="w3-bar-item w3-button w3-hide-medium w3-left w3-padding-large w3-hover-indigo" title="Create"><i class="fa fa-plus-square-o" aria-hidden="true"></i>  Create Post</a>
-
- </div>
-
-</div>
-
-<!-- Navbar on small screens -->
-
-
-<!-- Page Container -->
-<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">   
-     
-  <!-- The Grid -->
-  <div class="w3-row">
-    <!-- Left Column -->
-    <div class="w3-col m3">
-      <!-- Profile -->
-      <div class="w3-card w3-round w3-indigo">
-        <div class="w3-container">
-         <h4 class="w3-center">My Profile</h4>
-         <p class="w3-center"><img src="/w3images/avatar3.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
-         <hr>
-         <p><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> Designer, UI</p>
-         <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i> London, UK</p>
-         <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i> April 1, 1988</p>
-        </div>
-      </div>
-      <br>
-      
-      <!-- Accordion -->
-    
-      <br>
-      
-      <!-- Interests --> 
-      
-      
-      <!-- Alert Box -->
-      
-    <!-- End Left Column -->
+{% block content %}
+    <div class="row">
+        <p>
+            This is table is renderd on the Server. Flask gets the data from the database and uses jinja templates to dyanmically render this page when a request is sent to <a href="/usrs">/users</a>.
+        </p>
     </div>
-    
-    <!-- Middle Column -->
-    <div class="w3-col m7">
-    
-      
-      
-      <div class="w3-container w3-card w3-indigo w3-round w3-margin"><br>
-        <img src="/w3images/avatar2.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-        <span class="w3-right w3-opacity">1 min</span>
-        <h4>John Doe</h4><br>
-        <hr class="w3-clear">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <div class="w3-row-padding" style="margin:0 -16px">
-            <div class="w3-half">
-              <img src="/w3images/lights.jpg" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th><th>Receiver ID</th><th>Sender ID</th><th>Distr ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if user %}
+            <div class="row">
+              <div class="col s12 m7">
+                <div class="card">
+                  <div class="card-image">
+                    <img src="">
+                  </div>
+                  <div class="card-content">
+                    <p>User id: {{user.id}}</p>
+                    <p>username: {{user.username}}</p>
+                  </div>
+                  <div class="card-action">
+                    <a href="/api/profile/{{user.id}}">View Profile</a>
+                    <p class="ranking" >
+                      <a class="s5" href="/create/rating/{{current_user.id}}/{{user.id}}/5"><i class="material-icons">star</i></a>
+                      <a class="s4" href="/create/rating/{{current_user.id}}/{{user.id}}/4"><i class="material-icons">star</i></a>
+                      <a class="s3" href="/create/rating/{{current_user.id}}/{{user.id}}/3"><i class="material-icons">star</i></a>
+                      <a class="s2" href="/create/rating/{{current_user.id}}/{{user.id}}/2"><i class="material-icons">star</i></a>
+                      <a class="s1" href="/create/rating/{{current_user.id}}/{{user.id}}/1"><i class="material-icons">star</i></a>
+                  <p>
+                  <style>
+                    .ranking  .material-icons{
+                      font-size: em;
+                      color: grey;
+                      float: right;
+                      cursor: pointer;
+                    }
+                    .material-icons:hover{
+                      color: gold;
+                    }
+                  </style> 
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="w3-half">
-              <img src="/w3images/nature.jpg" style="width:100%" alt="Nature" class="w3-margin-bottom">
-          </div>
-        </div>
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Like</button> 
-        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</button> 
-      </div>
-      
-      
-    <!-- End Middle Column -->
+          {% endif %}
+
+            {% for feed in feeds %}
+            <tr>
+                <td>{{feed.id}}</td>
+                <td>{{feed.receiverID}}</td>
+                <td>{{feed.senderID}}</td>
+                <td>{{feed.distID}}</td>
+            </tr>
+            {% endfor %}
+          
+        <tbody>
+      </table>
     </div>
-    
-    <!-- Right Column -->
-   
-    <!-- End Right Column -->
-    </div>
-    
-  <!-- End Grid -->
-  </div>
-  
-<!-- End Page Container -->
-</div>
-<br>
-
-<!-- Footer -->
-
-</script>
-
-</body>
-</html> 
+{% endblock %}

@@ -1,15 +1,30 @@
-{% extends "Indexhtml" %}
-{% block title %}Index{% endblock %}
-{% block head %}
-    {{ super() }}
-    <style type="text/css">
-        .important { color: #255b91; }
-    </style>
-{% endblock %}
-{% block content %}
-    <h1>Index</h1>
-    <p class="important">
-      Welcome to my awesome homepage.
+{% extends "layout.html" %}
+{% block title %}Active Users{% endblock %}
+{% block page %}Active Users{% endblock %}
 
-    </p>
+{{ super() }}
+
+{% block content %}
+    <div class="row">
+        <p>
+            This is table is renderd on the Server. Flask gets the data from the database and uses jinja templates to dyanmically render this page when a request is sent to <a href="/usrs">/users</a>.
+        </p>
+    </div>
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th> User Id</th><th>Username</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+            <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.username}}</td>
+            </tr>
+          {% endfor %}
+        <tbody>
+      </table>
+    </div>
 {% endblock %}

@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect,  url_for
+
 from flask_jwt import jwt_required, current_identity
 from flask import Flask,flash
 from flask_login import LoginManager, current_user, login_required
@@ -25,14 +26,33 @@ user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
 
 @user_views.route('/users', methods=['GET'])
-@jwt_required()
 def get_current_user():
     return jsonify(
         {
-            "id" : current_identity.id,
-            "username": current_identity.username,
+            "userId" : current_user.id,
+            "username": current_user.username,
         }
     )
+
+
+# for UI
+@user_views.route('/allUsers', methods=['GET'])
+def get_user_page():
+    users = get_all_users()
+    return render_template('users.html', users=users)
+
+@user_views.route('/api/profile', methods=['GET'])
+def view_profile():
+    return render_template('profile.html',user=current_user)
+
+
+
+@user_views.route('/api/profile/<userID>', methods=['GET'])
+def view_profile_from_id(userID):
+    user = get_user(userID)
+    return render_template('profile.html',user=user)
+
+
 
 @user_views.route('/api/users', methods=['POST'])
 @jwt_required()
@@ -132,3 +152,4 @@ def viewProfile(userId):
     if user:
         return render_template('profilePage.html',user=user,images=images,rating_info=total_rating,values=values)
     return redirect(url_for('distributer_views.view_profiles_again'))
+
