@@ -1,16 +1,15 @@
-from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect,  url_for
+from flask import Blueprint, render_template, jsonify, request, send_from_directory,flash
+from flask_jwt import jwt_required
+from datetime import date
+from flask_login import current_user
 
-from flask_jwt import jwt_required, current_identity
-from flask import Flask,flash
-from flask_login import LoginManager, current_user, login_required
-
-from App.models import feed, distributor, user
-
-from datetime import datetime
+from App.models import User, Distribution
+import datetime
 
 from App.controllers import *
 
 feed_views = Blueprint('feed_views', __name__, template_folder='../templates')
+
 
 @feed_views.route('/api/feeds', methods=['GET'])
 def create_feed_action():
@@ -81,6 +80,8 @@ def view_all_feed():
     users = [get_user(feed.senderID) for feed in feeds]
 
     return render_template('feed.html', users=users, feeds= feeds)
+
+
 
 
 

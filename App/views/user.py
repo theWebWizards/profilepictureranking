@@ -3,24 +3,11 @@ from flask import Blueprint, render_template, jsonify, request, send_from_direct
 from flask_jwt import jwt_required, current_identity
 from flask import Flask,flash
 from flask_login import LoginManager, current_user, login_required
+from datetime import datetime
+ 
+from App.models import *
 
-
-from App.controllers import (
-    create_user, 
-    getUserbyUsername,
-    get_user,
-    get_user_json,
-    get_all_users,
-    get_all_users_json,
-    update_user,
-    delete_user,
-    getImagesByUser_JSON,
-    get_average_rate_by_ratee,
-    get_ratings_by_ratee_json,
-    distribute_all,
-    authenticate,
-    login_user
-)
+from App.controllers import *
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
@@ -152,4 +139,3 @@ def viewProfile(userId):
     if user:
         return render_template('profilePage.html',user=user,images=images,rating_info=total_rating,values=values)
     return redirect(url_for('distributer_views.view_profiles_again'))
-

@@ -10,9 +10,7 @@ from datetime import timedelta
 
 from App.database import create_db
 
-from App.controllers import (
-    setup_jwt
-)
+from App.controllers import *
 from App.models import *
 
 from App.views import (
@@ -20,7 +18,8 @@ from App.views import (
     image_views,
     rating_views,
     ranking_views,
-    index_views
+    index_views, 
+    feed_views
 )
 
 # New views must be imported and added to this list
@@ -30,7 +29,8 @@ views = [
     image_views,
     rating_views,
     ranking_views,
-    index_views
+    index_views,
+    feed_views
 ]
 
 def add_views(app, views):
