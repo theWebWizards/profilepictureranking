@@ -1,6 +1,6 @@
 from App.database import db
 from App.models import Distributor
-from App.controllers.feed import (
+from App.controllers import (
     create_feed,
     get_sender_feeds,
     get_receiver_feeds,
@@ -87,7 +87,7 @@ def distribute():
                     daily_sent_feeds = len(         #num of feeds sent by sender
                         [
                             feed 
-                            for feed in get_sender_feeds(sender_Id)
+                            for feed in get_sender_feeds(senderId)
                             if feed.distributor.timestamp >= (datetime.now() - timedelta(days=1))
                         ]
                     )
@@ -95,7 +95,7 @@ def distribute():
             if daily_sent_feeds < distributor.numOfProfiles:
 
                 received = any(
-                    feed.sender_Id == senderId for feed in rec_feeds
+                    feed.senderId == senderId for feed in rec_feeds
                 )   
 
                 if (                                #if feed from sender not received then feed created
@@ -104,7 +104,7 @@ def distribute():
                     and (senderId not in senders)
                 ):
 
-                    create_feed(senderId, receiverId, distributorId)
+                    create_feed(senderId, receiverId, distributor.id)
                     senders.append(senderId)
                     receivers.append(receiverId)
                     break
@@ -132,7 +132,7 @@ def distribute():
                         and senderId not in senders
                     ):
 
-                     create_feed(senderId, receiverId, distributorId)
+                     create_feed(senderId, receiverId, distributor.id)
                      senders.append(senderId)
                      receivers.append(receiverId)
                      break
@@ -144,9 +144,9 @@ def distribute():
             return True
 
 def distribute_all():
-    current = distrubute()
+    current = distribute()
     count = 1
-    while not current:
+    while current:
         current = distribute()
         count = count+1
     return count
