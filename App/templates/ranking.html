@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Image Rankings{% endblock %}
+{% block page %}Rankings{% endblock %}
+
+{{ super() }}
+
+{% block content %}
+    <div class="row">
+        
+    </div>
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank ID</th><th>Creator ID</th><th>Image ID</th><th>Rank Given</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rank in rankings %}
+            <tr>
+                <td>{{rank.id}}</td>
+                <td>{{rank.rankerId}}</td>
+                <td>{{rank.imageId}}</td>
+                <td>{{rank.rank}}</td>
+            </tr>
+          {% endfor %}
+        <tbody>
+      </table>
+    </div>
+{% endblock %}

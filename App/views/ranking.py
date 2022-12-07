@@ -103,3 +103,13 @@ def create_ranking_action_ui(score, imgID, ranker):
 
     return flash("user not found")
 
+
+@ranking_views.route('/view/rankings', methods=['GET'])
+def get_all_rankings_action_ui():
+    rankings = get_rankings_by_ranker(current_user.id)
+    if rankings:
+        return render_template('ranking.html', rankings=rankings)
+    else:
+        flash("You have not ranked any images")
+        return render_template('profile.html', user=current_user)
+
