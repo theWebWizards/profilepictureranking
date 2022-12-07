@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, jsonify, request, send_from_directory
+from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect
 from flask_jwt import jwt_required
+from flask_login import login_required, current_user
+
 
 
 from App.controllers import (
@@ -20,15 +22,34 @@ from App.controllers import (
 image_views = Blueprint('image_views', __name__, template_folder='../templates')
 
 
-@image_views.route('/api/images', methods=['POST'])
-@jwt_required()
-def create_image_action():
-    data = request.json
-    image = createImage(current_identity.id, data["url"])
-    if image:
-        image = create_image(data['userId'])
-        return jsonify(getImage_JSON((image.getId()))), 201
-    return jsonify({"message":"Image unable to post"}), 400
+
+@image_views.route('/addImage',methods=['GET'])
+@login_required
+def image_page():
+    return render_template('addimage.html')
+
+@image_views.route('/newimage', methods=['POST'])
+def create_image_action_ui():
+
+    url = request.form.get('url')
+
+    user = current_user
+    image = createImage(current_user.id, url)
+    return  render_template('profile.html',user=user)
+
+
+@image_views.route('/addImage', methods=['POST'])
+@login_required
+def add_image():
+    data = request.form
+    picture=get_image_by_url(current_user.id,data['url'])
+    if picture==None:
+        image = create_image(current_user.id, data['url'])
+        flash("You just added a new picture to your profile!")
+        return redirect(url_for('image_views.image_page'))
+    flash('You already uploaded this picture')
+    return redirect(url_for('image_views.image_page'))
+
 
 @image_views.route('/api/image/<int:id>', methods=['GET'])
 @jwt_required()

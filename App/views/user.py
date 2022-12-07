@@ -108,7 +108,7 @@ def loginAction():
     permittedUser=authenticate(data['username'], data['password'])
     if permittedUser==None:
         flash("Wrong Credentials, Please try again")
-        return redirect(url_for('user_views.getLoginPage'))
+        return render_template('login.html')
     login_user(permittedUser,remember=True)
     flash('You were successfully logged in!')
     return render_template('profile.html',user=current_user)

@@ -1,89 +1,66 @@
 {% extends "layout.html" %}
-{% block title %}Profile Picture Voting{% endblock %}
-{% block page %}Profile Picture Voting{% endblock %}
+{% block title %}User Profile{% endblock %}
+{% block page %}Profile{% endblock %}
+
 {{ super() }}
 
+{% block content %}
+  {% if user %}
+    <div class="column is-4 is-offset-4">
+      <h1 class="title">{{ user.username }}</h1>
+        {% if user.id ==current_user.id%}
+          <div class="box">
+              <form method="POST" action="/newimage">
 
-    {% block content %}
+                  <div class="field">
+                      <div class="control">
+                          <input class="input is-large" type="text" name="url" placeholder="url" autofocus="">
+                      </div>
+                  </div>
 
-    <style>
-      .container{
-        margin: 0 auto;
-        max-width: 1280px;
-        width: 80%;
-      }
+                  <div  class = "input-field s" style="margin-left: 10px; text-decoration-color: white;">
+                    <button class=" light-blue accent-3 btn waves-effect waves-grey button">   <a style="color: white;" >Post image </a> </button>
+                  </div>
 
-      body{
-        background-color: #1651a4 ;
-      }
-    </style>
-
-    <div class="row">
-        <div class="col s3">
+              </form>
+          </div>
+        {% endif%}
+    </div>
+    {% for img in user.images%}
+      <div class="row">
+        <div class="col s12 m4">
           <div class="card">
             <div class="card-image">
-              <img src="{{ url_for('static', filename='icon.png') }}">
-            </div>
-            <div class="card-content">
-              <h4>  {{ current_user.username }} ID # {{current_user.id}} </h4>
+              <img src="{{img.url}}">
             </div>
             <div class="card-action">
-              <a href="/addImage" style="margin-bottom: 10px" class="waves-effect waves-light btn #1565c0 blue darken-3"><i class="material-icons right">photo_camera</i>Add Image</a>
-              <a href="/viewUserImages" style="margin-bottom: 10px"class="#1565c0 blue darken-3 waves-effect waves-light btn"><i class="material-icons right">photo</i>View Images</a>
-              <a href="/get_top_profiles" style="margin-bottom: 10px"class="#1565c0 blue darken-3 waves-effect waves-light btn"><i class="material-icons right">show_chart</i>Top Profiles</a>
-              <a href="/logout" style="margin-bottom: 10px"class="#1565c0 blue darken-3 waves-effect waves-light btn"><i class="material-icons right">exit_to_app</i>Logout</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col s9">
-          <h3 style="font-family: 'Playball', cursive; color:white " class="center"> Feed</h3>
-          <div style="margin-bottom:20px;" class="divider"></div> 
-          <div class="row">
-          
-            {% if value==0 %}
-
-            <h5 class="center" style="margin-top:5%; color:white">Please add five or more users to view the Profile Feed.
-            </h5>
-
-            {% else %}
-            
-            {% for profile in profiles %}
-            <!--card code to be repeated goes here-->
-            <div class="col s4">
-              <div class="card hoverable #039be5 light-blue darken-1">
-                <div class="card-content white-text">
-                  <span class="card-title center">User ID # {{profile.senderID}}</span>
-                 
-                </div>
-                <div style="background-color: white"class="card-action center">
-                  <a href="/viewUserProfile/{{profile.senderID}}" class="#039be5 light-blue darken-1 waves-effect waves-light btn"><i class="material-icons right">arrow_forward</i>View Profile</a>
-                  
-                </div>
+              <div>
+                {% if user.id == current_user.id%}
+                  <a class=" light-blue accent-3 btn waves-effect waves-grey button"   href="/delete/image/{{img.id}}">delete</a>
+                {% endif%} 
               </div>
+              <p class="ranking" >
+                  <a class="s5" href="/create/rank/5/{{img.id}}/{{current_user.id}}"><i class="material-icons">star</i></a>
+                  <a class="s4" href="/create/rank/4/{{img.id}}/{{current_user.id}}"><i class="material-icons">star</i></a>
+                  <a class="s3" href="/create/rank/3/{{img.id}}/{{current_user.id}}"><i class="material-icons">star</i></a>
+                  <a class="s2" href="/create/rank/2/{{img.id}}/{{current_user.id}}"><i class="material-icons">star</i></a>
+                  <a class="s1" href="/create/rank/1/{{img.id}}/{{current_user.id}}"><i class="material-icons">star</i></a>
+              <p>
+              <style>
+                .ranking  .material-icons{
+                  font-size: 2em;
+                  color: grey;
+                  float: right;
+                  cursor: pointer;
+                }
+                .material-icons:hover{
+                  color: gold;
+                }
+              </style>    
             </div>
-
-            {% endfor %}
-
-            {% endif %}
-
-           
-
-
-
           </div>
         </div>
-
-       
-
-
-
-
       </div>
-
-   
-
-
-   
-
-    {% endblock %}
+    {% endfor %}
+  {% endif %}
+{% endblock %}
