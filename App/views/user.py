@@ -44,7 +44,7 @@ def create_user_action():
     user = create_user(data["username"], data["password"])
     if user:
         distribute_all()
-        return jsonify({"message": "User Creates"}), 201
+        return jsonify({"message": "User Created"}), 201
     return jsonify({"message":"User not Created"}), 400
 
 @user_views.route('/api/users', methods=['GET'])
@@ -63,7 +63,7 @@ def get_user_action():
         return jsonify(get_user_json(id)),200
     return jsonify({"message":"User Not Found"}), 404
 
-@user_views.route('/api/users/<int:id>/details', methods=['GET'])
+@user_views.route('/api/users/<int:id>/info', methods=['GET'])
 @jwt_required()
 def get_user_details_action():
     user = get_user(id)
@@ -78,15 +78,6 @@ def get_user_details_action():
         return jsonify(details),200
     return jsonify({"message":"User Not Found"}), 404
 
-@user_views.route('/api/users/<int:id>', methods=['PUT'])
-@jwt_required()
-def update_user_action():
-     data = request.json
-     curr = update_user(id, data['username'])
-     if curr:
-        return jsonify(get_user_json(id)),200
-     else:
-        return jsonify({"message":"User not found"}), 404 
 
 @user_views.route('/api/users/<int:id>', methods=['DELETE'])
 @jwt_required()
