@@ -70,7 +70,7 @@ def get_rankings_by_image_action(imageId):
 
 @ranking_views.route('/api/rankings/<int:id>', methods=['PUT'])
 @jwt_required()
-def update_ction(id):
+def update_action(id):
     data = request.json
     status = update_ranking(id, data["rank"])
     if status:
