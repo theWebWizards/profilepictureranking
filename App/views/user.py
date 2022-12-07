@@ -44,7 +44,7 @@ def create_user_action():
     user = create_user(data["username"], data["password"])
     if user:
         distribute_all()
-        return jsonify({"message": "User Creates"}), 201
+        return jsonify({"message": "User Created"}), 201
     return jsonify({"message":"User not Created"}), 400
 
 @user_views.route('/api/users', methods=['GET'])
