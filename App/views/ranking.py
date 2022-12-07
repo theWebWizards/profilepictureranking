@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, jsonify, request, send_from_directory
+from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash
 from flask_jwt import jwt_required
+from flask_login import current_user
 
 
 from App.controllers import (
@@ -10,7 +11,6 @@ from App.controllers import (
     get_ranking_json,
     get_all_rankings,
     get_all_rankings_json,
-    get_rankings_by_ranker,
     get_rankings_by_ranker_json,
     get_rankings_by_image,
     get_rankings_by_image_json,
@@ -88,4 +88,18 @@ def delete_ranking_action(id):
     else:
         return jsonify({"message": "This ranking does not exist"}), 404
      
+@ranking_views.route('/create/rank/<score>/<imgID>/<ranker>', methods=['GET'])
+def create_ranking_action_ui(score, imgID, ranker):
+
+    img= getImage(imgID)
+    if get_user(ranker) and img:
+
+        ranking = create_ranking(ranker, img.id, score)
+        flash("created sucessfully")
+
+        user=get_user(img.userId)
+
+        return render_template('profile.html', user=user)
+
+    return flash("user not found")
 

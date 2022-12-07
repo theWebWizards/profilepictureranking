@@ -8,8 +8,8 @@ class Ranking(db.Model):
     rank = db.Column(db.Integer, nullable=False)
     
     
-    def __init__(self, creatorId, imageId, score):
-        self.creatorId = creatorId
+    def __init__(self, rankerId, imageId, rank):
+        self.rankerId = rankerId
         self.imageId = imageId
         self.rank = rank
 

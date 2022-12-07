@@ -23,6 +23,7 @@ image_views = Blueprint('image_views', __name__, template_folder='../templates')
 
 
 
+
 @image_views.route('/addImage',methods=['GET'])
 @login_required
 def image_page():
@@ -78,10 +79,10 @@ def getAverageImageRank(imageId):
         return jsonify(getImageRankingJSON(imageId)), 200
     return jsonify({"message": "This image was not found"}), 404
 
-@image_views.route('/api/image/<int:id>', methods=['DELETE'])
-@jwt_required()
-def delete_image_action():
-    curr = deleteImage(id)
-    if curr:
-        return jsonify({"message":"Image Deleted"}), 200
-    return jsonify({"message":"Image Not Found"}), 404
+
+
+@image_views.route('/delete/image/<id>')
+def delete_image_action(id):
+    if getImage(id):
+        deleteImage(id)
+    return  render_template('profile.html',user=current_user)

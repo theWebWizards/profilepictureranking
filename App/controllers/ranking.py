@@ -3,7 +3,7 @@ from App.database import db
 from App.controllers import get_user, getImage
 
 def create_ranking(rankerId, imageId, rank):
-    image = get_image(imageId)
+    image = getImage(imageId)
     ranker = get_user(rankerId)
     if ranker and image:
         newRanking = Ranking(rankerId=rankerId, imageId=imageId, rank=rank)
@@ -12,9 +12,12 @@ def create_ranking(rankerId, imageId, rank):
         return newRanking
     return None
 
-def get_rankings_by_ranker(rakerId):
-    rankings = Ranking.query.filter_by(rankerId=rankerId).all()
+def get_rankings_by_ranker(rankerId, imageId):
+    if User.query.get(rankerId) and Image.query.get(imageId):
+        rankings = Ranking.query.filter_by(rankerId= rankerId, imageId= imageId).first()
     return rankings
+
+
 
 def get_rankings_by_image(imageId):
      rankings = Ranking.query.filter_by(imageId=imageId).all()
