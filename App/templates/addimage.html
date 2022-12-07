@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Profile Picture Voting{% endblock %}
+{% block page %}Profile Picture Voting{% endblock %}
+{{ super() }}
+
+
+    {% block content %}
+
+    <style> 
+        body{
+          background-image: url("{{ url_for('static', filename='waves.png') }}") ;
+          background-size:cover;
+        }
+        
+        </style>
+
+
+    <h3 style="font-family: 'Playball', cursive;" class="center">Add a new Image</h3>
+    <div style="margin-bottom:20px" class="divider #2196f3 blue"></div> 
+    <div class="center">
+    <img class="responsive-img" style="max-height:15vh; text-align:center" src="static/camera.png">
+</div>
+    <div class="center">
+    
+        <h5 style="margin-bottom: 3%;">Please enter the URL for the image which you would like to add.</h5>
+        <form action="/addImage" method="post">
+    <div class="input-field col s6" style="background-color:white; margin-left:10%; width:80%">
+        <input id="url" type="text" name="url" class="validate">
+        <label for="url">URL</label>
+      </div>
+      
+      <button style="margin-top: 2%; width:20%" class=" #1565c0 blue darken-3 btn waves-effect waves-light" type="submit">Submit
+        <i class="material-icons left">add_a_photo</i>
+      </button>
+    </form>
+    <a href="/viewprofiles" style="margin-top: 2%; width:20% " class="#388e3c green darken-2 waves-effect waves-light btn"><i class="material-icons left">arrow_back</i>Return to Feed</a>
+    
+</div>
+
+    {% endblock %}

@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, jsonify, request, send_from_directory
+from flask import Blueprint, render_template, jsonify, request, send_from_directory, redirect,  url_for
 from flask_jwt import jwt_required, current_identity
+from flask import Flask,flash
+from flask_login import LoginManager, current_user, login_required
 
 
 from App.controllers import (
@@ -14,7 +16,9 @@ from App.controllers import (
     getImagesByUser_JSON,
     get_average_rate_by_ratee,
     get_ratings_by_ratee_json,
-    distribute_all
+    distribute_all,
+    authenticate,
+    login_user
 )
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
@@ -107,7 +111,7 @@ def loginAction():
         return redirect(url_for('user_views.getLoginPage'))
     login_user(permittedUser,remember=True)
     flash('You were successfully logged in!')
-    return redirect(url_for('distributer_views.view_profiles_again'))
+    return render_template('profile.html',user=current_user)
 
 #signup routes
 @user_views.route('/signup',methods=['GET'])
@@ -120,6 +124,20 @@ def signupAction():
     user = getUserbyUsername(data['username'])
     if user:
         flash("Username taken please try a new username")
-        return redirect(url_for('user_views.getSignUpPage'))
+        return render_template('signup.html')
     user = create_user(data['username'], data['password'])
-    return redirect(url_for('user_views.getLoginPage'))
+    return render_template('login.html')
+
+#route for viewing a user's profile
+@user_views.route('/viewUserProfile/<userId>', methods=['GET'])
+@login_required
+def viewProfile(userId):
+    user=get_user(userId)
+    result = view_feed(current_user.id, userId)
+    images=get_images_by_userid(userId)
+    images = [image.toJSON() for image in images]
+    values=get_user_image_count(userId)
+    total_rating=get_calculated_rating(userId)
+    if user:
+        return render_template('profilePage.html',user=user,images=images,rating_info=total_rating,values=values)
+    return redirect(url_for('distributer_views.view_profiles_again'))

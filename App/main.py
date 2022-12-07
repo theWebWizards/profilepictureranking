@@ -13,6 +13,7 @@ from App.database import create_db
 from App.controllers import (
     setup_jwt
 )
+from App.models import *
 
 from App.views import (
     user_views,
@@ -55,6 +56,13 @@ def loadConfig(app, config):
     for key, value in config.items():
         app.config[key] = config[key]
 
+''' Begin Flask Login Functions '''
+login_manager = LoginManager()
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+''' End Flask Login Functions '''
+
 def create_app(config={}):
     app = Flask(__name__, static_url_path='/static')
     CORS(app)
@@ -66,6 +74,7 @@ def create_app(config={}):
     photos = UploadSet('photos', TEXT + DOCUMENTS + IMAGES)
     configure_uploads(app, photos)
     add_views(app, views)
+    login_manager.init_app(app)
     create_db(app)
     setup_jwt(app)
     app.app_context().push()
